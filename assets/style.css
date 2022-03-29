@@ -1,0 +1,158 @@
+* {
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+body {
+	background: #035c1f;
+	margin: 0;
+	padding: 16px 32px;
+}
+
+.green {
+	color: #035c1f;
+}
+
+.red {
+	color: #cd373b;
+}
+
+.content-container {
+	display: flex;
+	flex-direction: column;
+	width: 500px;
+	flex: 50%;
+	height: 600px;
+	margin:auto;
+	background: #fff;
+	border-radius: 7px;
+}
+
+.image--frame {
+	height: 150px;
+	overflow:none;
+	width: 100%;
+}
+
+.image--asset {
+	height: 100%;
+	width: auto;
+	margin: auto;
+	display:block;
+	max-width:100%;
+}
+
+.headding--main {
+	margin: 0;
+    margin-top: 11px;
+    font-weight: 500;
+    font-size: 17px;
+    text-align: center;
+    color: #cd373b;
+    line-height: 15px;
+}
+.auth {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.auth--btn {
+	color: #fff;
+    background: #035c1f;
+    border: 0;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 7px;
+    box-shadow: 0px 1px 3px 3px #b4c3b9;
+    cursor: pointer;
+}
+#auth--status {
+	width:100%;
+	height: 15px;
+	text-align:center;
+}	
+
+.content--area {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+	padding: 11px;
+}
+
+.url--textarea {
+	width: 100%;
+    border: none;
+    padding: 7px;
+    box-shadow: 0px 1px 1px 1px #cccccc;
+}
+
+.url--textarea:focus, .select--cat:focus, select--cat:hover { 
+	outline: none !important;
+}
+
+.mt--30 {
+	margin-top: 30px
+}
+
+.select--cat,option .option--cat {
+	width:100%;
+	padding: 7px;
+    border: none;
+    background: #fff;
+    box-shadow: 0px 1px 1px 1px #cccccc;
+}
+
+.option--cat {
+	box-shadow: none;
+	padding:10px;
+}
+
+.option--cat:hover {
+	background: #035c1f;
+}
+
+#progress--text {
+    background: #e9e6e6bd;
+    padding: 7px;
+    font-size: 12.5px;
+    height: 215px;
+    overflow-y: auto;
+    max-height: 215px;
+    width: 100%;
+    box-shadow: 0px 1px 1px 1px #cccccc;
+}
+
+.progress-bar--main {
+	height: 25px;
+	width: 100%;
+	background: #dbd5d561;
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar--status {
+	background: #035c1f;
+	height: 100%;
+}
+
+.progress-bar--pecentage {
+	position: absolute;
+    inset: 0;
+    color: #bfb7b7;
+}
+#progress--text > span {
+	margin-top: 5px;
+	display: block;
+}
+@media only screen and (max-width:600px) {
+	.content-container {
+		width: 100%;
+		flex: 25%;
+	}
+	.foot {
+		color:#fff;
+	}
+}

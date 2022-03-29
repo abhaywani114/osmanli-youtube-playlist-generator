@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<title>Osmanli Youtube Playlist Generator</title>
+		<script src="https://apis.google.com/js/api.js"></script>	
+
+		<!-- google fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--  Essential META Tags -->
+		<meta property="og:title" content="Osmanli Youtube Playlist Generator">
+		<meta property="og:type" content="tool" />
+		<meta property="og:image" content="assets/images/header.png">
+		<meta property="og:url" content="http://euro-travel-example.com/index.htm">
+		<meta property="og:description" content="A playlist resource represents a YouTube playlist. A playlist is a collection of videos that can be viewed sequentially and shared with other users. By default, playlists are publicly visible to other users, but playlists can be public or private. Create youtube play list using Osmanli YouTube Playlist Generator">
+		<meta name="twitter:card" content="summary_large_image">
+
+	
+
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+	<body>
+		<div class="content-container">
+			<div class="image--frame">
+				<img class="image--asset" src="assets/images/header.png" />
+			</div>
+
+			<h1 class="headding--main">Osmanli Youtube Playlist Generator</h1>
+
+			<div class="content--area">
+
+				<div class="auth" id="dashboard--auth" style="display:none">
+					<p id="auth--status"></p>
+					<button onclick="authenticate()" class="auth--btn">Authenticate Session</button>
+				</div>
+
+				<div id="dashboard--main" style="display:none" >
+					<div>
+						<textarea id="url--textarea" class="url--textarea" placeholder="Youtube Video URLs" rows="5"></textarea>
+					</div>
+
+					<div class="mt--30">
+						<input type="text" placeholder="Playlist name" id="playlist--name" class="select--cat" />
+					</div>
+
+					<div class="mt--30">
+						<input type="text" placeholder="Playlist description" class="select--cat"id="playlist--description" />
+					</div>
+
+					<div class="mt--30">
+						<select id="playlist--privacy"  class="select--cat">
+							<option class="option--privacy" value="">Select privacy</option>
+							<option class="option--privacy" value="private">Private</option>
+							<option class="option--privacy" value="public">Public</option>
+							<option class="option--privacy" value="unlisted">Unlisted</option>
+						</select>
+					</div>
+					<div class="mt--30" style="text-align:center;">
+						<button onclick="triggerUpdate()" class="auth--btn">Create Playlist</button>
+					</div>
+				</div>
+
+				<div id="dashboard--progress">
+					<div id="progress--text">
+						<span class="green">New session started</span>
+					</div>
+
+					<div class="mt--30" style="text-align:center;">
+						<div class="progress-bar--main">
+							<div id="progress-bar--status" class="progress-bar--status" style="width:0.5%"></div>
+							<div id="progress-bar--percentage" class="progress-bar--pecentage">0%</div>
+						</div>
+					</div>
+
+					<div class="mt--30" style="text-align:center;">
+						<button onclick="newBatch()" class="auth--btn">Next Batch</button>
+					</div>
+				</div>
+
+			</div>
+
+					<div class="foot"  style="text-align:center;left:0;right:0;bottom:9px;font-size:12.5px;position:absolute">
+								<p>&#169; abhaywani114.github.io</p>
+					</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="assets/main.js"></script>
+</html>
