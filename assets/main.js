@@ -44,25 +44,6 @@ function loadClient() {
 var videoDetails = [];
 var progressText = document.getElementById('progress--text');
 
-function updateCategoryId(res, pcount) {
-	 return gapi.client.youtube.videos.update({
-	   "part": [
-		 "snippet"
-	   ],
-	   "resource": res 
-	 }).then(function(response) {
-		 // Handle the results here (response.result has the parsed body).
-		progressText.append(createSpan(`Updated: ${res.snippet.title}`, 'green'));
-		if(updateProgression(videoDetails.length) == "100.00") {
-			progressText.append(createSpan(`Processed: ${videoDetails.length} videos`, 'green'));
-		} 
-     }, function(err) { 
-		console.error("Execute error", err.result.error.message); 
-
-		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-	});
-}
-
 function getVideoDetail(youtube_video_id) {
 	return gapi.client.youtube.videos.list({'resource':{
 		 id: youtube_video_id,
@@ -162,7 +143,7 @@ function triggerUpdate() {
 				console.error("Execute error: createNewPlaylist()", err); 
 				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 			});
-		},2500);
+		},3500);
 	}, function error(err) {
 		console.error("Execute error", err); 
 		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
