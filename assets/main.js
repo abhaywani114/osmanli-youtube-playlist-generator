@@ -104,7 +104,7 @@ function triggerUpdate() {
 	}).filter(u => u != '' && u != null);
 
 	selectView('progress');
-	 getVideoDetail(youtubeURLs).then( async function (response) { 
+	 getVideoDetail(youtubeURLs).then( function (response) { 
 
 		//filter the video details
 		response.result["items"].forEach((v) => {
@@ -122,7 +122,7 @@ function triggerUpdate() {
 				const playlist_id = response.result.id; 
 				progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
 
-				videoDetails.forEach( async function(video) {
+				videoDetails.forEach( function(video) {
 					addItemsPlaylist(playlist_id, {
 							videoId:video.id,
 							kind:video.kind
@@ -137,7 +137,7 @@ function triggerUpdate() {
 						updateProgression(videoDetails.length)
 					});	
 
-					await sleep(3000);
+					sleep(3000);
 				});
 
 			}, (err)=> {
@@ -197,8 +197,10 @@ function newBatch() {
 	document.getElementById("progress-bar--percentage").innerHTML = `${0}%`;
 }
 
-function sleep(ms) {
-
-  return new Promise(resolve => setTimeout(resolve, ms));
-
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
