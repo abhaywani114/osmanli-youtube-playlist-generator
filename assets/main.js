@@ -95,7 +95,7 @@ function createNewPlaylist() {
 }
 
 function triggerUpdate() {
-	const selectedp = document.getElementById("select--privacy").value
+	const selectedp = document.getElementById("playlist--privacy").value
 	if (selectedp == '') {
 		alert("Please select a privacy");
 		return;
