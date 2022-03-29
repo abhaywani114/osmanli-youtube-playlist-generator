@@ -117,6 +117,7 @@ function triggerUpdate() {
 				});
 		});
 
+			progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'green'));
 			//create new playlist
 			createNewPlaylist().then((response) => {
 				const playlist_id = response.result.id; 
