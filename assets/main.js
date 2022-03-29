@@ -117,7 +117,7 @@ function triggerUpdate() {
 				});
 		});
 
-			progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'green'));
+			progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'red'));
 			//create new playlist
 			createNewPlaylist().then((response) => {
 				const playlist_id = response.result.id; 
@@ -138,7 +138,7 @@ function triggerUpdate() {
 						updateProgression(videoDetails.length)
 					});	
 
-					sleep(3000);
+					sleep(3300);
 				});
 
 			}, (err)=> {
