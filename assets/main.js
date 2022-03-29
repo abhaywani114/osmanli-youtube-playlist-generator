@@ -35,34 +35,11 @@ function loadClient() {
 	return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
 		.then(function() { 
 			console.log("GAPI client loaded for API"); 
-		//	loadCategories();
 		},function(err) { 
 			console.error("Error loading GAPI client for API", err); 
 		});
 }
 
-function loadCategories() {
-	const categorySelector = document.getElementById("select--cat");
-	gapi.client.youtube.videoCategories.list({
-		  "regionCode": "IN"//"US"
-		}).then(function(response) {
-                // Handle the results here (response.result has the parsed body).
-                response.result['items'].map((cat) => {
-					if (cat.snippet.assignable == true ) {
-						const new_element = document.createElement("option");
-						new_element.innerText = `${cat.snippet.title} (${cat.id})`;
-						new_element.value = cat.id;
-						new_element.className = 'option--cat';
-						categorySelector.append(new_element);
-					}
-				});
-
-				progressText.append(createSpan(`Success: Categories loaded from YouTube Server`, 'green'));
-              },function(err) { 
-				console.error("Execute error", err); 
-				progressText.append(createSpan(`Faliure: Unable to load categories from YouTube Server`, 'red'));
-		});
-}
 //////////////////////////////
 var videoDetails = [];
 var progressText = document.getElementById('progress--text');
@@ -91,45 +68,7 @@ function getVideoDetail(youtube_video_id) {
 		 id: youtube_video_id,
 		 part:'snippet'
 	 }})
-/*
-		.then(function(response) {
-		// Handle the results here (response.result has the parsed body).
-		console.log("Response", response);
-
-		response.result["items"].forEach((v) => {
-				videoDetails.push({
-					id:v.id,
-					snippet: {
-						title:v.snippet.title,
-					}
-				});
-			//	progressText.append(createSpan(`Found: ${v.snippet.title} (category id: ${v.snippet.categoryId})`, 'green'));
-			//	updateProgression(response.result["items"].length);
-		});
-
-		progressText.append(createSpan(`---Update started---`, 'red'));
-
-	//	select_category = document.getElementById("select--cat")
-	//	select_category = select_category.options[select_category.selectedIndex].text;
-	//	progressText.append(createSpan(`New category: ${select_category} `, 'green'));
-
-		videoDetails.forEach( v => {
-			updateCategoryId(v);
-		});	
-
-		createNewPlaylist().then((response) => {
-			console.log("play list created");
-		}, (err)=> {
-			console.error("Execute error: createNewPlaylist()", err); 
-			progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-		});
-
-	   },function(err) { 
-		console.error("Execute error", err); 
-		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-	});
-*/
- }
+}
 
 function createNewPlaylist() {
 	const playlist_name = document.getElementById("playlist--name").value;
@@ -156,11 +95,11 @@ function createNewPlaylist() {
 }
 
 function triggerUpdate() {
-//	const selectedCategoryId = document.getElementById("select--cat").value
-//	if (selectedCategoryId == '') {
-//		alert("Please select a category");
-//		return;
-//	}
+	const selectedp = document.getElementById("select--privacy").value
+	if (selectedp == '') {
+		alert("Please select a privacy");
+		return;
+	}
 
 
 	let youtubeURLs =  document.getElementById("url--textarea").value
@@ -168,6 +107,13 @@ function triggerUpdate() {
 		alert("Please enter some YouTube video URLs.");
 		return;
 	}
+
+	let playlist_name =  document.getElementById("playlist--name").value
+	if (playlist_name == '') {
+		alert("Please enter some playlist name");
+		return;
+	}
+
 	
 	//parsing url
 	youtubeURLs = youtubeURLs.replace(/,|\n/g, ' ' ).split(" ").filter( e => e != '');
@@ -190,30 +136,33 @@ function triggerUpdate() {
 				});
 		});
 
-		//create new playlist
-		createNewPlaylist().then((response) => {
-			const playlist_id = response.result.id; 
-			progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
+		setTimeout(() => {
+			//create new playlist
+			createNewPlaylist().then((response) => {
+				const playlist_id = response.result.id; 
+				progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
 
-			videoDetails.forEach( video => {
-				addItemsPlaylist(playlist_id, {
-						videoId:video.id,
-						kind:video.kind
-				}).then( (response) => {
-					progressText.append(createSpan(`Added: ${video.snippet.title} to playlist`, 'green'));
-					updateProgression(videoDetails.length)
-				}, (err) => {
-					console.error("Execute error: addItemsPlaylist()", err); 
-					progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-					updateProgression(videoDetails.length)
-				});	
+				videoDetails.forEach( video => {
+					addItemsPlaylist(playlist_id, {
+							videoId:video.id,
+							kind:video.kind
+					}).then( (response) => {
+						progressText.append(createSpan(`Added: ${video.snippet.title} to playlist`, 'green'));
+						if(updateProgression(videoDetails.length) == "100.00") {
+								progressText.append(createSpan(`Processed: ${videoDetails.length} videos`, 'green'));
+							} 
+					}, (err) => {
+						console.error("Execute error: addItemsPlaylist()", err); 
+						progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
+						updateProgression(videoDetails.length)
+					});	
+				});
+
+			}, (err)=> {
+				console.error("Execute error: createNewPlaylist()", err); 
+				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 			});
-
-		}, (err)=> {
-			console.error("Execute error: createNewPlaylist()", err); 
-			progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-		});
-
+		},2500);
 	}, function error(err) {
 		console.error("Execute error", err); 
 		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
