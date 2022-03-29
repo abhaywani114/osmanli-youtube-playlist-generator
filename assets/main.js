@@ -104,7 +104,7 @@ function triggerUpdate() {
 	}).filter(u => u != '' && u != null);
 
 	selectView('progress');
-	 getVideoDetail(youtubeURLs).then( (response) => { 
+	 getVideoDetail(youtubeURLs).then( async function (response) { 
 
 		//filter the video details
 		response.result["items"].forEach((v) => {
@@ -117,7 +117,6 @@ function triggerUpdate() {
 				});
 		});
 
-		setTimeout(() => {
 			//create new playlist
 			createNewPlaylist().then((response) => {
 				const playlist_id = response.result.id; 
@@ -143,7 +142,7 @@ function triggerUpdate() {
 				console.error("Execute error: createNewPlaylist()", err); 
 				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 			});
-		},3500);
+			await sleep(3000);
 	}, function error(err) {
 		console.error("Execute error", err); 
 		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
@@ -195,4 +194,10 @@ function newBatch() {
 	progressText.append(createSpan("New batch started", 'green'));
 	document.getElementById("progress-bar--status").style.width = `${0.5}%`;
 	document.getElementById("progress-bar--percentage").innerHTML = `${0}%`;
+}
+
+function sleep(ms) {
+
+  return new Promise(resolve => setTimeout(resolve, ms));
+
 }
