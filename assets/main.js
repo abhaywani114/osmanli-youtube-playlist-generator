@@ -122,7 +122,7 @@ function triggerUpdate() {
 				const playlist_id = response.result.id; 
 				progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
 
-				videoDetails.forEach( video => {
+				videoDetails.forEach( async function(video) {
 					addItemsPlaylist(playlist_id, {
 							videoId:video.id,
 							kind:video.kind
@@ -136,13 +136,14 @@ function triggerUpdate() {
 						progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 						updateProgression(videoDetails.length)
 					});	
+
+					await sleep(3000);
 				});
 
 			}, (err)=> {
 				console.error("Execute error: createNewPlaylist()", err); 
 				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 			});
-			await sleep(3000);
 	}, function error(err) {
 		console.error("Execute error", err); 
 		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
