@@ -112,40 +112,34 @@ function triggerUpdate() {
 	}).filter(u => u != '' && u != null);
 
 	selectView('progress');
-	 getVideoDetail(youtubeURLs).then( function (response) { 
-
-		//filter the video details
-		response.result["items"].forEach((v) => {
-				videoDetails.push({
-					id:v.id,
-					kind:v.kind,
-					snippet: {
-						title:v.snippet.title,
-					}
-				});
+	//filter the video details
+	youtubeURLs.forEach((v) => {
+			videoDetails.push({
+				id:v,
+				kind:"youtube#video",
+				snippet: {
+					title: "xxxx",
+				}
+			});
 		});
 
-			progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'red'));
-			if(document.getElementById("new_playlist").checked) { 
-				//create new playlist
-				createNewPlaylist().then((response) => {
-					const playlist_id = response.result.id; 
-					progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
-					processVideoIDS(playlist_id); 
-				}, (err)=> {
-					console.error("Execute error: createNewPlaylist()", err); 
-					progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-				});
-			} else if(document.getElementById("modify_playlist").checked) { 
-				const playlist_url = document.getElementById("playlist--url").value;
-				const playlist_id = new URL(playlist_url).searchParams.get('list');
+		progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'red'));
+		if(document.getElementById("new_playlist").checked) { 
+			//create new playlist
+			createNewPlaylist().then((response) => {
+				const playlist_id = response.result.id; 
+				progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
 				processVideoIDS(playlist_id); 
-			}
+			}, (err)=> {
+				console.error("Execute error: createNewPlaylist()", err); 
+				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
+			});
+		} else if(document.getElementById("modify_playlist").checked) { 
+			const playlist_url = document.getElementById("playlist--url").value;
+			const playlist_id = new URL(playlist_url).searchParams.get('list');
+			processVideoIDS(playlist_id); 
+		}
 
-	}, function error(err) {
-		console.error("Execute error", err); 
-		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-	});
 }
 
 function processVideoIDS(playlist_id) {
@@ -154,7 +148,7 @@ function processVideoIDS(playlist_id) {
 				videoId:video.id,
 				kind:video.kind
 		}).then( (response) => {
-			progressText.append(createSpan(`Added: ${video.snippet.title} to playlist`, 'green'));
+			progressText.append(createSpan(`Added: https://www.youtube.com/watch?v=${video.id}`, 'green'));
 			if(updateProgression(videoDetails.length) == "100.00") {
 					progressText.append(createSpan(`Processed: ${videoDetails.length} videos`, 'green'));
 				} 
@@ -171,6 +165,7 @@ function processVideoIDS(playlist_id) {
 }
 
 function addItemsPlaylist(id, resource) {
+	progressText.append(createSpan(`Queue: video id ${resource.videoId}`, 'green'));
 	return gapi.client.youtube.playlistItems.insert({
       "part": [
         "snippet"
