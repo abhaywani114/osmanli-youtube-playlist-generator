@@ -39,23 +39,40 @@
 					<div>
 						<textarea id="url--textarea" class="url--textarea" placeholder="Youtube Video URLs" rows="5"></textarea>
 					</div>
+					<div class="mt--10">
+						  <input type="radio" id="new_playlist" name="action_playlist" value="new_playlist" 
+								onclick="onChangePlaylistAction('new_playlist')">
+						  <label for="new_playlist">New</label>
 
-					<div class="mt--30">
-						<input type="text" placeholder="Playlist name" id="playlist--name" class="select--cat" />
+						  <input type="radio" id="modify_playlist" name="action_playlist" value="modify_playlist"
+								onclick="onChangePlaylistAction('modify_playlist')">
+						  <label for="modify_playlist">Modify</label>
+					</div>
+					<div id="ui--new_playlist" style="display:none;">
+						<div class="mt--10">
+							<input type="text" placeholder="Playlist name" id="playlist--name" class="select--cat" />
+						</div>
+
+						<div class="mt--30">
+							<input type="text" placeholder="Playlist description" class="select--cat"id="playlist--description" />
+						</div>
+						<div class="mt--30">
+							<select id="playlist--privacy"  class="select--cat">
+								<option class="option--privacy" value="">Select privacy</option>
+								<option class="option--privacy" value="private">Private</option>
+								<option class="option--privacy" value="public">Public</option>
+								<option class="option--privacy" value="unlisted">Unlisted</option>
+							</select>
+						</div>
+
 					</div>
 
-					<div class="mt--30">
-						<input type="text" placeholder="Playlist description" class="select--cat"id="playlist--description" />
+					<div id="ui--modify_playlist" style="display:none">
+						<div class="mt--10">
+							<input type="text" placeholder="Playlist URL" id="playlist--url" class="select--cat" />
+						</div>
 					</div>
 
-					<div class="mt--30">
-						<select id="playlist--privacy"  class="select--cat">
-							<option class="option--privacy" value="">Select privacy</option>
-							<option class="option--privacy" value="private">Private</option>
-							<option class="option--privacy" value="public">Public</option>
-							<option class="option--privacy" value="unlisted">Unlisted</option>
-						</select>
-					</div>
 					<div class="mt--30" style="text-align:center;">
 						<button onclick="triggerUpdate()" class="auth--btn">Create Playlist</button>
 					</div>

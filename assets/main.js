@@ -76,12 +76,27 @@ function createNewPlaylist() {
 }
 
 function triggerUpdate() {
-	const selectedp = document.getElementById("playlist--privacy").value
-	if (selectedp == '') {
-		alert("Please select a privacy");
-		return;
-	}
 
+	if(document.getElementById("new_playlist").checked) { 
+		const selectedp = document.getElementById("playlist--privacy").value
+		if (selectedp == '') {
+			alert("Please select a privacy");
+			return;
+		}
+
+
+
+		let playlist_name =  document.getElementById("playlist--name").value
+		if (playlist_name == '') {
+			alert("Please enter some playlist name");
+			return;
+		}
+	} else if(document.getElementById("modify_playlist").checked) { 
+		if (document.getElementById("playlist--url").value == '') {
+			alert("Please enter playlist url");
+			return;
+		}
+	}
 
 	let youtubeURLs =  document.getElementById("url--textarea").value
 	if (youtubeURLs == '') {
@@ -89,13 +104,6 @@ function triggerUpdate() {
 		return;
 	}
 
-	let playlist_name =  document.getElementById("playlist--name").value
-	if (playlist_name == '') {
-		alert("Please enter some playlist name");
-		return;
-	}
-
-	
 	//parsing url
 	youtubeURLs = youtubeURLs.replace(/,|\n/g, ' ' ).split(" ").filter( e => e != '');
 	youtubeURLs = youtubeURLs.map( u => {
@@ -118,38 +126,48 @@ function triggerUpdate() {
 		});
 
 			progressText.append(createSpan(`Please wait, reading your data it may take a while depending on input`, 'red'));
-			//create new playlist
-			createNewPlaylist().then((response) => {
-				const playlist_id = response.result.id; 
-				progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
-
-				videoDetails.forEach( function(video) {
-					addItemsPlaylist(playlist_id, {
-							videoId:video.id,
-							kind:video.kind
-					}).then( (response) => {
-						progressText.append(createSpan(`Added: ${video.snippet.title} to playlist`, 'green'));
-						if(updateProgression(videoDetails.length) == "100.00") {
-								progressText.append(createSpan(`Processed: ${videoDetails.length} videos`, 'green'));
-							} 
-					}, (err) => {
-						console.error("Execute error: addItemsPlaylist()", err); 
-						progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-						updateProgression(videoDetails.length)
-					});	
-
-					sleep(3300);
+			if(document.getElementById("new_playlist").checked) { 
+				//create new playlist
+				createNewPlaylist().then((response) => {
+					const playlist_id = response.result.id; 
+					progressText.append(createSpan(`Playlist ID: ${playlist_id}`, 'green'));
+					processVideoIDS(playlist_id); 
+				}, (err)=> {
+					console.error("Execute error: createNewPlaylist()", err); 
+					progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 				});
+			} else if(document.getElementById("modify_playlist").checked) { 
+				const playlist_url = document.getElementById("playlist--url").value;
+				const playlist_id = new URL(playlist_url).searchParams.get('list');
+				processVideoIDS(playlist_id); 
+			}
 
-			}, (err)=> {
-				console.error("Execute error: createNewPlaylist()", err); 
-				progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
-			});
 	}, function error(err) {
 		console.error("Execute error", err); 
 		progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
 	});
-	console.log("get video 2");
+}
+
+function processVideoIDS(playlist_id) {
+	videoDetails.forEach( function(video) {
+		addItemsPlaylist(playlist_id, {
+				videoId:video.id,
+				kind:video.kind
+		}).then( (response) => {
+			progressText.append(createSpan(`Added: ${video.snippet.title} to playlist`, 'green'));
+			if(updateProgression(videoDetails.length) == "100.00") {
+					progressText.append(createSpan(`Processed: ${videoDetails.length} videos`, 'green'));
+				} 
+		}, (err) => {
+			console.error("Execute error: addItemsPlaylist()", err); 
+			progressText.append(createSpan(`Error: ${err.result.error.message.replace(/<[^>]*>/g, '')} `, 'red'));
+			progressText.append(createSpan(`URL: https://www.youtube.com/watch?v=${video.id}`, 'red'));
+			updateProgression(videoDetails.length)
+		});	
+
+		sleep(3300);
+	});
+
 }
 
 function addItemsPlaylist(id, resource) {
@@ -185,10 +203,12 @@ function updateProgression(v_count) {
 
 function newBatch() {
 	selectView('main');
+	onChangePlaylistAction("none");
 	videoDetails = [];
 	document.getElementById("url--textarea").value = '';
 	document.getElementById("playlist--name").value = '';
 	document.getElementById("playlist--description").value = '';
+	document.getElementById("playlist--url").value = '';
 
 	document.getElementById("playlist--privacy").selectedIndex = 0;
 
@@ -196,6 +216,15 @@ function newBatch() {
 	progressText.append(createSpan("New batch started", 'green'));
 	document.getElementById("progress-bar--status").style.width = `${0.5}%`;
 	document.getElementById("progress-bar--percentage").innerHTML = `${0}%`;
+
+	
+	document.getElementById("new_playlist").checked = false
+	document.getElementById("modify_playlist").checked = false
+}
+
+function onChangePlaylistAction(action) {
+	document.getElementById('ui--new_playlist').style.display =  (action === "new_playlist") ? "":"none";
+	document.getElementById('ui--modify_playlist').style.display =  (action === "modify_playlist") ? "":"none";
 }
 
 function sleep(milliseconds) {
